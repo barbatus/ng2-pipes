@@ -1,0 +1,12 @@
+<header>
+  <party-form></party-form>
+</header>
+<main>
+  <ul>
+    <li *ng-for="#party of parties | mcp">
+      <a [router-link]="['/party-details', {partyId: party.doc._id}]">{{party.doc.name}}</a>
+      <p>{{party.doc.description}}</p>
+      {{i}}
+    </li>
+  </ul>
+</main>
