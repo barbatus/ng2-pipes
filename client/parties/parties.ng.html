@@ -3,9 +3,9 @@
 </header>
 <main>
   <ul>
-    <li *ng-for="#party of parties | mcp">
-      <a [router-link]="['/party-details', {partyId: party.doc._id}]">{{party.doc.name}}</a>
-      <p>{{party.doc.description}}</p>
+    <li *ng-for="#party of parties">
+      <a [router-link]="['/party-details', {partyId: party._id}]">{{party.name}}</a>
+      <p>{{party.description}}</p>
     </li>
   </ul>
 </main>

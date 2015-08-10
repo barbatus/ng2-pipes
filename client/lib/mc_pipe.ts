@@ -19,8 +19,8 @@ export class MCPipe extends BasePipe implements PipeFactory {
 
   transform(collection: any, args: List<any> = null): Array<any> {
     if (!this._observe) {
-        setTimeout(() => this._startAutoRequestCheck(collection));
-        this._observe = this._startObserver(collection);
+      setTimeout(() => this._startAutoRequestCheck(collection));
+      this._observe = this._startObserver(collection);
     }
 
     if (!this._isUpdated) {
@@ -37,6 +37,7 @@ export class MCPipe extends BasePipe implements PipeFactory {
       console.log('_startAutoRequestCheck');
       collection.fetch();
       self._cdRef.requestCheck();
+      self._isUpdated = true;
     }));
   }
 
@@ -45,22 +46,18 @@ export class MCPipe extends BasePipe implements PipeFactory {
     return collection.observe({
       addedAt: function(doc, index) {
         self._addAt(doc, index);
-        this._isUpdated = true;
       },
 
       changedAt: function(doc1, doc2, index) {
         self._docs[index].next(doc1);
-        this._isUpdated = true;
       },
 
       movedTo: function(doc, fromIndex, toIndex) {
         self._moveTo(doc, fromIndex, toIndex);
-        this._isUpdated = true;
       },
 
       removedAt: function(doc, atIndex) {
         self._removeAt(atIndex);
-        this._isUpdated = true;
       }
     });
   }

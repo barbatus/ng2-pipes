@@ -19,11 +19,8 @@ export class PartyForm {
     // for longer Forms, consider using FormBuilder
     this.partyForm = new ControlGroup({
       name: new Control('', Validators.required),
-      description: new Control('', Validators.required),
-      radio: new Control('1')
+      description: new Control('', Validators.required)
     });
-
-    this.radio = '1';
   }
 
   add(event) {
