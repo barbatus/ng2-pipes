@@ -11,7 +11,7 @@ export class MongoCollectionDifferFactory extends DefaultIterableDifferFactory {
   create(cdRef: ChangeDetectorRef): any { return new MongoCollectionDiffer(cdRef); }
 }
 
-class MongoCollectionDiffer extends DefaultIterableDiffer {
+class MongoCollectionDiffer {
   private _cdRef: ChangeDetectorRef = null;
   private _inserted: Array<CollectionChangeRecord> = [];
   private _removed: Array<CollectionChangeRecord> = [];
@@ -19,7 +19,6 @@ class MongoCollectionDiffer extends DefaultIterableDiffer {
   private _subscription = false;
 
   constructor(cdRef: ChangeDetectorRef) {
-    super();
     this._cdRef = cdRef;
   }
 

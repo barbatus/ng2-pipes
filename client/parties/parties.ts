@@ -37,7 +37,7 @@ export class PartiesCmp {
     this.parties.name = 'Party1';
   }
 
-  loadParty() {
-    this.parties.name = 'Party2';
+  loadParty(name) {
+    this.parties.name = name;
   }
 }
