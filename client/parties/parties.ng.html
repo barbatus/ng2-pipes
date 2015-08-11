@@ -1,13 +1,16 @@
-<header>
-  <party-form></party-form>
+<header style="width: 700px">
+  <party-form style="display: inline-block"></party-form>
+  <div style="float: right">
+    <input type="text" #searchtext>
+    <input type="button" value="Search" (click)="loadParty(searchtext.value)">
+  </div>
 </header>
 <main>
   <ul>
     <li *ng-for="#party of parties">
       <a [router-link]="['/party-details', {partyId: party.doc._id}]">{{party.doc.name}}</a>
-      <p>{{party.doc.description}}</p>
+      <p>Where: {{party.doc.location}}</p>
+      <p>About: {{party.doc.description}}</p>
     </li>
   </ul>
-  <input type="button" value="Load test1" (click)="loadParty('Party1')">
-  <input type="button" value="Load test2" (click)="loadParty('Party2')">
 </main>

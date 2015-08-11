@@ -1,6 +1,6 @@
 ///<reference path="../../typings/typings.d.ts"/>
 
-import {Component, View, NgFor, NgIf} from 'angular2/angular2';
+import {Component, View, NgFor, NgIf, NgModel} from 'angular2/angular2';
 import {Pipes, defaultPipes} from 'angular2/src/change_detection/change_detection';
 import {bind} from 'angular2/di'
 import {routerDirectives} from 'angular2/router';
@@ -24,7 +24,7 @@ import {MongoCollectionObserver} from 'client/lib/mongo_collection_observer';
 })
 @View({
   templateUrl: 'client/parties/parties.ng.html',
-  directives: [NgFor, routerDirectives, PartyForm]
+  directives: [NgFor, routerDirectives, PartyForm, NgModel]
 })
 export class PartiesCmp {
   parties: IParty[];
@@ -32,12 +32,11 @@ export class PartiesCmp {
 
   constructor() {
     this.parties = new MongoCollectionObserver(function() {
-        return Parties.find({name: this.get('name')});
+        return Parties.find({location: this.get('location')});
     });
-    this.parties.name = 'Party1';
   }
 
-  loadParty(name) {
-    this.parties.name = name;
+  loadParty(location) {
+    this.parties.location = location;
   }
 }
