@@ -25,7 +25,7 @@ Meteor.startup(function () {
     }
 
     var locations = ['Mountain View', 'Palo Alto'];
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 1000; i++) {
       var location = locations[(Math.random() * 2) >> 0];
       Parties.insert({
         name: Fake.sentence(50),
