@@ -14,6 +14,14 @@ Meteor.startup(function () {
       {
         'name': 'Savage lounging',
         'description': 'Leisure suit required. And only fiercest manners.'
+      },
+      {
+        'name': 'Party1',
+        'description': 'Leisure suit required. And only fiercest manners.'
+      },
+      {
+        'name': 'Party2',
+        'description': 'Leisure suit required. And only fiercest manners.'
       }
     ];
 

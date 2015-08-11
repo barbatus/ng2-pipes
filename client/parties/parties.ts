@@ -9,6 +9,7 @@ import {IterableDiffers} from 'angular2/src/change_detection/differs/iterable_di
 import {PartyForm} from 'client/party-form/party-form';
 import {MCPipe} from 'client/lib/mc_pipe'
 import {MongoCollectionDifferFactory} from 'client/lib/mongo_collection_diff';
+import {MongoCollectionObserver} from 'client/lib/mongo_collection_observer';
 
 @Component({
   selector: 'parties',
@@ -30,6 +31,13 @@ export class PartiesCmp {
   user: Object;
 
   constructor() {
-    this.parties = Parties.find();
+    this.parties = new MongoCollectionObserver(function() {
+        return Parties.find({name: this.get('name')});
+    });
+    this.parties.name = 'Party1';
+  }
+
+  loadParty() {
+    this.parties.name = 'Party2';
   }
 }
