@@ -12,63 +12,67 @@ export class MongoCollectionDifferFactory extends DefaultIterableDifferFactory {
 }
 
 class MongoCollectionDiffer {
-  private _cdRef: ChangeDetectorRef = null;
   private _inserted: Array<CollectionChangeRecord> = [];
   private _removed: Array<CollectionChangeRecord> = [];
   private _moved: Array<CollectionChangeRecord> = [];
-  private _subscription = false;
+  private _observer = null;
+  private _lastChanges: Array<AddChange|MoveChange|RemoveChange> = [];
 
-  constructor(cdRef: ChangeDetectorRef) {
-    this._cdRef = cdRef;
-  }
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   forEachAddedItem(fn: Function) {
     for (var i = 0; i < this._inserted.length; i++) {
       fn(this._inserted[i]);
     }
-    this._inserted.length = 0;
   }
 
   forEachMovedItem(fn: Function) {
     for (var i = 0; i < this._moved.length; i++) {
       fn(this._moved[i]);
     }
-    this._moved.length = 0;
   }
 
   forEachRemovedItem(fn: Function) {
     for (var i = 0; i < this._removed.length; i++) {
       fn(this._removed[i]);
     }
-    this._removed.length = 0;
   }
 
   diff(observer: MongoCollectionObserver) {
-    console.log('diff');
-    if (!this._subscription) {
+    this._reset();
+
+    if (this._observer !== observer) {
       var self = this;
+      if (this._subscription) {
+        ObservableWrapper.dispose(this._subscription);
+      }
       this._subscription = ObservableWrapper.subscribe(observer,
         changes => {
           self._updateLatestValue(changes);
         });
-      self._applyChanges(observer.lastChanges);
+      this._observer = observer;
     }
 
-    return this;
+    if (this._lastChanges) {
+      this._applyChanges(this._lastChanges);
+      this._lastChanges = null;
+      return this;
+    }
+
+    return null;
   }
 
   _updateLatestValue(changes) {
-    console.log('_updateLatestValue');
-    this._applyChanges(changes);
-    this._isUpdated = true;
-    this._cdRef.requestCheck();
+    this._lastChanges = changes;
   }
 
-  _applyChanges(changes) {
+  _reset() {
     this._inserted.length = 0;
     this._moved.length = 0;
     this._removed.length = 0;
+  }
 
+  _applyChanges(changes) {
     for (var i = 0; i < changes.length; i++) {
       if (changes[i] instanceof AddChange) {
         this._inserted.push(this._createChangeRecord(

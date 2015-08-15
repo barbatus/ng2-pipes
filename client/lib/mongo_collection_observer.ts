@@ -45,10 +45,6 @@ export class MongoCollectionObserver extends EventEmitter {
     this._startAutoCursorUpdate(cursorDefFunc); 
   }
 
-  get lastChanges() {
-    return this._lastChanges;
-  }
-
   _defineGets(cursorDefFunc) {
     cursorDefFunc.call(this);
   }
@@ -84,7 +80,6 @@ export class MongoCollectionObserver extends EventEmitter {
         self._stopCursor(self._hCursor);
         self._hCursor = null;
       }
-      console.log('_startAutoCursorUpdate');
       self._hCursor = self._startCursor(cursorDefFunc.call(self));
     }));
   }
@@ -92,13 +87,9 @@ export class MongoCollectionObserver extends EventEmitter {
   _stopCursor(cursorHandle: CursorHandle) {
     cursorHandle.stop();
     var len = this._docs.length;
-    this._lastChanges.length = 0;
     this._docs.length = 0;
     for (var i = 0; i < len; i++) {
-      this._lastChanges.push(new RemoveChange(i));
-    }
-    if (len) {
-      this.next(this._lastChanges);
+      this._changes.push(new RemoveChange(i));
     }
   }
 
@@ -112,9 +103,9 @@ export class MongoCollectionObserver extends EventEmitter {
     var self = this;
     return Tracker.autorun(zone.bind(() => {
       cursor.fetch();
-      self._lastChanges = self._changes.splice(0);
-      if (self._lastChanges.length) {
-        self.next(self._lastChanges);
+      var lastChanges = self._changes.splice(0);
+      if (lastChanges.length) {
+        self.next(lastChanges);
       }
     }));
   }
